@@ -17,13 +17,10 @@ import com.ali.richmaker.ui.theme.RichMakerTheme
 fun RichMakerApp(modifier: Modifier = Modifier) {
     RichMakerTheme {
         val navController = rememberNavController()
-        val bottomBarItems = listOf(Screen.Home, Screen.Search, Screen.Profile)
+        val bottomBarItems = listOf(Screen.Transaction, Screen.Home, Screen.Search, Screen.Profile)
 
-        Scaffold (
-            bottomBar = { RichMakerBottomBar(navController, bottomBarItems) }
-        ){padding ->
+        Scaffold(bottomBar = { RichMakerBottomBar(navController, bottomBarItems) }) { padding ->
             RichMakerNavGraph(navController, modifier.padding(padding))
-            
         }
 
     }
