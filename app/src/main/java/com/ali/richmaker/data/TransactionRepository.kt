@@ -2,27 +2,25 @@ package com.ali.richmaker.data
 
 import com.ali.richmaker.common.Dispatcher
 import com.ali.richmaker.common.RichMakerDispatchers
-import com.ali.richmaker.data.local.database.TransactionDao
-import com.ali.richmaker.data.local.database.TransactionEntity
-import com.ali.richmaker.data.local.database.TransactionWithCategory
-import com.ali.richmaker.data.local.database.TransactionsInMonth
+import com.ali.richmaker.data.local.database.dao.TransactionDao
+import com.ali.richmaker.data.local.database.model.TransactionEntity
+import com.ali.richmaker.data.local.database.model.TransactionWithCategoryModel
+import com.ali.richmaker.data.local.database.model.TransactionsInMonthModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
-import java.text.SimpleDateFormat
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.Locale
 import javax.inject.Inject
 
 interface TransactionRepository {
     suspend fun upsertTransaction(transaction: TransactionEntity)
-    fun getTransactionsWithCategories(): Flow<List<TransactionWithCategory>>
+    fun getTransactionsWithCategories(): Flow<List<TransactionWithCategoryModel>>
     fun getTotalIncome(): Flow<Double>
     fun getTotalExpense(): Flow<Double>
     fun getBalance(): Flow<Double>
-    fun getTransactionsGroupedByMonth(): Flow<List<TransactionsInMonth>>
+    fun getTransactionsGroupedByMonth(): Flow<List<TransactionsInMonthModel>>
 }
 
 
@@ -38,8 +36,8 @@ class DefaultTransactionRepository @Inject constructor(
         }
     }
 
-    override fun getTransactionsWithCategories(): Flow<List<TransactionWithCategory>> {
-        return transactionDao.getTransactionsWithCategories()
+    override fun getTransactionsWithCategories(): Flow<List<TransactionWithCategoryModel>> {
+        return transactionDao.getTransactionsWithCategory()
 
     }
 
@@ -58,13 +56,13 @@ class DefaultTransactionRepository @Inject constructor(
 
     }
 
-    override fun getTransactionsGroupedByMonth(): Flow<List<TransactionsInMonth>> {
-        return transactionDao.getTransactionsWithCategories().map { transactions ->
+    override fun getTransactionsGroupedByMonth(): Flow<List<TransactionsInMonthModel>> {
+        return transactionDao.getTransactionsWithCategory().map { transactions ->
             transactions.groupBy { transaction ->
-                transaction.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+                transaction.transactionEntity.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
                     .format(monthFormatter)
             }.map { (month, transactionsInMonth) ->
-                TransactionsInMonth(
+                TransactionsInMonthModel(
                     month = month, transactions = transactionsInMonth
                 )
             }.sortedByDescending { it.month }

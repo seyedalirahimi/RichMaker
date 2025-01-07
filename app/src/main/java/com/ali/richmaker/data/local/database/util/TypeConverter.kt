@@ -1,4 +1,4 @@
-package com.ali.richmaker.data.local.database
+package com.ali.richmaker.data.local.database.util
 
 import androidx.room.TypeConverter
 import java.text.SimpleDateFormat

@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ali.richmaker.data.local.database.TransactionWithCategory
+import com.ali.richmaker.data.local.database.model.TransactionWithCategoryModel
 
 @Composable
 fun TransactionsScreenRoot(
@@ -68,11 +68,11 @@ fun TransactionsScreen(
 }
 
 @Composable
-fun TransactionItem(transaction: TransactionWithCategory) {
+fun TransactionItem(transaction: TransactionWithCategoryModel) {
     Column(modifier = Modifier.padding(vertical = 8.dp)) {
-        Text(text = "Category: ${transaction.categoryName}")
-        Text(text = "Amount: $${transaction.amount}")
-        Text(text = "Date: ${transaction.date}")
+        Text(text = "Category: ${transaction.categoryEntity.name}")
+        Text(text = "Amount: $${transaction.transactionEntity.amount}")
+        Text(text = "Date: ${transaction.transactionEntity.date}")
     }
 }
 

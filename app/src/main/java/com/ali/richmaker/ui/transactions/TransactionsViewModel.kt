@@ -3,10 +3,8 @@ package com.ali.richmaker.ui.transactions
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ali.richmaker.data.TransactionRepository
-import com.ali.richmaker.data.local.database.TransactionWithCategory
-import com.ali.richmaker.data.local.database.TransactionsInMonth
+import com.ali.richmaker.data.local.database.model.TransactionsInMonthModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -50,7 +48,7 @@ class TransactionsViewModel @Inject constructor(
 }
 
 data class TransactionsUiState(
-    val transactions: List<TransactionsInMonth> = emptyList(),
+    val transactions: List<TransactionsInMonthModel> = emptyList(),
     val totalBalance: Double = 0.0,
     val totalIncome: Double = 0.0,
     val totalExpense: Double = 0.0,

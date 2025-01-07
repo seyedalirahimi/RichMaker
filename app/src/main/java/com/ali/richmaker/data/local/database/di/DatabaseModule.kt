@@ -1,10 +1,10 @@
-package com.ali.richmaker.data.local.di
+package com.ali.richmaker.data.local.database.di
 
 import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.ali.richmaker.data.local.database.AppDatabase
+import com.ali.richmaker.data.local.database.RichMakerDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,21 +19,16 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class DatabaseModule {
 
-    @Provides
-    fun provideTransactionDao(appDatabase: AppDatabase) = appDatabase.transactionDao()
-
-    @Provides
-    fun provideCategoryDao(appDatabase: AppDatabase) = appDatabase.categoryDao()
 
     @Provides
     @Singleton
-    fun provideAppDatabase(@ApplicationContext appContext: Context): AppDatabase {
+    fun provideAppDatabase(@ApplicationContext appContext: Context): RichMakerDatabase {
 
         val predefinedCategories = listOf(
             "Salary", "Food", "Transportation", "Entertainment", "Healthcare", "Education", "Other"
         )
         return Room.databaseBuilder(
-            appContext, AppDatabase::class.java, AppDatabase.DATABASE_NAME
+            appContext, RichMakerDatabase::class.java, RichMakerDatabase.DATABASE_NAME
         ).addCallback(object : RoomDatabase.Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
