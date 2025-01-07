@@ -9,6 +9,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.Upsert
+import kotlinx.coroutines.flow.Flow
 import java.util.Date
 
 @Entity(
@@ -47,14 +48,14 @@ interface TransactionDao {
         JOIN categories c ON t.categoryId = c.id
         """
     )
-    suspend fun getTransactionsWithCategories(): List<TransactionWithCategory>
+    fun getTransactionsWithCategories(): Flow<List<TransactionWithCategory>>
 
     @Query("SELECT COALESCE(SUM(amount), 0) FROM transactions WHERE isIncome = 1")
-    fun getTotalIncome(): Double
+    fun getTotalIncome(): Flow<Double>
 
     @Query("SELECT COALESCE(SUM(amount), 0) FROM transactions WHERE isIncome = 0")
-    fun getTotalExpense(): Double
+    fun getTotalExpense(): Flow<Double>
 
     @Query("SELECT COALESCE(SUM(amount), 0) FROM transactions")
-    fun getBalance(): Double
+    fun getBalance(): Flow<Double>
 }

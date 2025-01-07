@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ali.richmaker.data.TransactionRepository
 import com.ali.richmaker.data.local.database.TransactionWithCategory
+import com.ali.richmaker.data.local.database.TransactionsInMonth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,56 +23,37 @@ class TransactionsViewModel @Inject constructor(
     val state: StateFlow<TransactionsUiState> get() = _state
 
     init {
-        loadTransactionsData()
-    }
 
-    private fun loadTransactionsData() {
+
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
-            try {
-                // Fetch data in parallel using async
-                val groupedTransactionsDeferred =
-                    async { transactionRepository.getTransactionsGroupedByMonth() }
-                val totalIncomeDeferred = async { transactionRepository.getTotalIncome() }
-                val totalExpenseDeferred = async { transactionRepository.getTotalExpense() }
-                val balanceDeferred = async { transactionRepository.getBalance() }
-
-                // Await all data
-                val groupedTransactions = groupedTransactionsDeferred.await()
-                val totalIncome = totalIncomeDeferred.await()
-                val totalExpense = totalExpenseDeferred.await()
-                val balance = balanceDeferred.await()
-
-                _state.update {
-                    it.copy(
-                        transactions = groupedTransactions.map { (month, transactions) ->
-                            TransactionInMonth(month, transactions)
-                        },
-                        totalBalance = balance,
-                        totalIncome = totalIncome,
-                        totalExpense = totalExpense,
-                        isLoading = false
-                    )
-                }
-            } catch (e: Exception) {
-                // Handle error and update state
-                _state.update {
-                    it.copy(isLoading = false, errorMessage = e.message ?: "An error occurred")
-                }
+            transactionRepository.getTransactionsGroupedByMonth().collect { transactions ->
+                _state.update { it.copy(transactions = transactions) }
+            }
+        }
+        viewModelScope.launch {
+            transactionRepository.getBalance().collect { balance ->
+                _state.update { it.copy(totalBalance = balance) }
+            }
+        }
+        viewModelScope.launch {
+            transactionRepository.getTotalIncome().collect { income ->
+                _state.update { it.copy(totalIncome = income) }
+            }
+        }
+        viewModelScope.launch {
+            transactionRepository.getTotalExpense().collect { expense ->
+                _state.update { it.copy(totalExpense = expense) }
             }
         }
     }
+
 }
 
 data class TransactionsUiState(
-    val transactions: List<TransactionInMonth> = emptyList(),
+    val transactions: List<TransactionsInMonth> = emptyList(),
     val totalBalance: Double = 0.0,
     val totalIncome: Double = 0.0,
     val totalExpense: Double = 0.0,
-    val isLoading: Boolean = false, // Added loading state
-    val errorMessage: String? = null // Added error message
+    val isLoading: Boolean = false,
 )
 
-data class TransactionInMonth(
-    val month: String, val transactions: List<TransactionWithCategory>
-)
