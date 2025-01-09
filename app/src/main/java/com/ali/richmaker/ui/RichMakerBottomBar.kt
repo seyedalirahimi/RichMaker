@@ -1,31 +1,38 @@
 package com.ali.richmaker.ui
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.ali.richmaker.ui.navigation.Screen
+import com.ali.richmaker.ui.navigation.TopLevelDestination
 
 @Composable
 fun RichMakerBottomBar(
     navController: NavController,
-    items: List<Screen>
+    items: List<TopLevelDestination>
 ) {
     NavigationBar {
         val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
-        items.forEach { screen ->
-            NavigationBarItem(
-                icon = { Icon(Icons.Default.Home, contentDescription = screen.title) },
-                label = { Text(screen.title) },
-                selected = currentRoute == screen.route,
+
+        items.forEach { destination ->
+
+            val destinationName =  destination.route::class.qualifiedName
+            val selected = currentRoute == destinationName
+           NavigationBarItem(
+                icon = {
+                    Icon(
+                        if (selected) destination.selectedIcon else destination.unselectedIcon,
+                        contentDescription = stringResource(destination.iconTextId)
+                    )
+                },
+                label = { stringResource(destination.titleTextId) },
+                selected = selected,
                 onClick = {
-                    if (currentRoute != screen.route) {
-                        navController.navigate(screen.route) {
+                    if (!selected) {
+                        navController.navigate(destination.route) {
                             // Avoid multiple copies of the same destination in the back stack
                             popUpTo(navController.graph.startDestinationId) {
                                 saveState = true

@@ -3,48 +3,71 @@ package com.ali.richmaker.ui.navigation
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.ali.richmaker.ui.categories.CategoriesScreenRoot
-import com.ali.richmaker.ui.categories.CategoriesViewModel
-import com.ali.richmaker.ui.transactions.TransactionsViewModel
-import com.ali.richmaker.ui.transactions.TransactionsScreenRoot
+import com.ali.richmaker.ui.feature_categories.CategoriesScreenRoot
+import com.ali.richmaker.ui.feature_transactions.TransactionsScreenRoot
+import kotlinx.serialization.Serializable
 
-sealed class Screen(val route: String, val title: String) {
-    data object Transaction : Screen("Transaction", "Transaction")
-    data object Categories : Screen("Categories", "Categories")
-    data object Home : Screen("home", "Home")
-    data object Search : Screen("search", "Search")
-    data object Profile : Screen("profile", "Profile")
+
+@Serializable
+sealed class Route {
+    @Serializable
+    data object HomeRoute : Route()
+
+    @Serializable
+    data object AnalysisRoute : Route()
+
+    @Serializable
+    data object TransactionRoute : Route()
+
+    @Serializable
+    data object CategoriesRoute : Route()
+
+    @Serializable
+    data object ProfileRoute : Route()
+
+    @Serializable
+    data class CategoryInfoRoute(val categoryId: Int) : Route()
 }
 
 @Composable
 fun RichMakerNavGraph(
-    navController: NavHostController, modifier: Modifier
+    navController: NavHostController, modifier: Modifier = Modifier
 ) {
     NavHost(
-        navController = navController, startDestination = Screen.Home.route, modifier = modifier
+        navController = navController, startDestination = Route.HomeRoute, modifier = modifier
     ) {
+        composable<Route.HomeRoute> {
+            Text("Home")
+        }
 
-        composable(Screen.Transaction.route) {
-            val tranViewModel: TransactionsViewModel = hiltViewModel()
-            TransactionsScreenRoot(tranViewModel)
+        composable<Route.AnalysisRoute> {
+            Text(
+                text = "Analysis"
+            )
         }
-        composable(Screen.Categories.route) {
-            val viewModel: CategoriesViewModel = hiltViewModel()
-            CategoriesScreenRoot(viewModel)
+        composable<Route.TransactionRoute> {
+            TransactionsScreenRoot()
+        }
+        composable<Route.CategoriesRoute> {
+            CategoriesScreenRoot(onCategoryClick = { categoryId ->
+                navController.navigate(route = Route.CategoryInfoRoute(categoryId))
+            })
+        }
+        composable<Route.CategoryInfoRoute> { categoryInfoRoute ->
+            Text(
+                text = "Category Info $categoryInfoRoute"
+            )
 
         }
-        composable(Screen.Home.route) {
-            Text(text = "Home")
+        composable<Route.ProfileRoute> {
+            Text(
+                text = "Profile"
+            )
         }
-        composable(Screen.Search.route) {
-            Text(text = "Search")
-        }
-        composable(Screen.Profile.route) {
-            Text(text = "Profile")
-        }
+
+
     }
 }

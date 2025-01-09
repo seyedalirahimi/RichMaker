@@ -1,12 +1,10 @@
-package com.ali.richmaker.ui.categories
+package com.ali.richmaker.ui.feature_categories
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ali.richmaker.data.local.database.dao.CategoryDao
 import com.ali.richmaker.data.local.database.model.CategoryEntity
-import com.ali.richmaker.ui.transactions.TransactionsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map

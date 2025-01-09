@@ -1,4 +1,4 @@
-package com.ali.richmaker.ui.transactions
+package com.ali.richmaker.ui.feature_transactions
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -7,12 +7,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ali.richmaker.data.local.database.model.TransactionWithCategoryModel
 
 @Composable
 fun TransactionsScreenRoot(
-    transactionsViewModel: TransactionsViewModel, modifier: Modifier = Modifier
+    transactionsViewModel: TransactionsViewModel = hiltViewModel(),
+    modifier: Modifier = Modifier
 ) {
     val transactionsUiState = transactionsViewModel.state.collectAsStateWithLifecycle()
     TransactionsScreen(
