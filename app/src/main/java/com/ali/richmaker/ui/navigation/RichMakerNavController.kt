@@ -6,6 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.ali.richmaker.ui.feature_categories.CategoriesScreenRoot
 import com.ali.richmaker.ui.feature_transactions.TransactionsScreenRoot
 import kotlinx.serialization.Serializable
@@ -57,10 +58,10 @@ fun RichMakerNavGraph(
             })
         }
         composable<Route.CategoryInfoRoute> { categoryInfoRoute ->
+            val categoryId = categoryInfoRoute.toRoute<Route.CategoryInfoRoute>().categoryId
             Text(
-                text = "Category Info $categoryInfoRoute"
+                text = "Category Info $categoryId"
             )
-
         }
         composable<Route.ProfileRoute> {
             Text(
