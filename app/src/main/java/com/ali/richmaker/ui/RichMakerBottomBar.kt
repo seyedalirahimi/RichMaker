@@ -29,9 +29,7 @@ fun RichMakerBottomBar(
 
             NavigationBarItem(icon = {
                 Icon(
-                    painter = painterResource(
-                        if (selected) destination.selectedDrawableId else destination.unselectedDrawableId
-                    ),
+                    painter = if (selected) destination.selectedPainter() else destination.unselectedPainter(),
                     contentDescription = stringResource(destination.iconTextId),
                     modifier = modifier.size(24.dp)
                 )

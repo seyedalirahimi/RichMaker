@@ -1,49 +1,51 @@
 package com.ali.richmaker.ui.navigation
 
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.painter.Painter
 import com.ali.richmaker.R
+import com.ali.richmaker.ui.theme.RichMakerPainter
 
 enum class TopLevelDestination(
-    @DrawableRes val selectedDrawableId: Int,
-    @DrawableRes val unselectedDrawableId: Int,
+    val selectedPainter: @Composable () -> Painter,
+    val unselectedPainter: @Composable () -> Painter,
     @StringRes val iconTextId: Int,
     @StringRes val titleTextId: Int,
     val route: Route,
     val baseRoute: Route = route,
 ) {
     Home(
-        selectedDrawableId = R.drawable.ic_home,
-        unselectedDrawableId =  R.drawable.ic_home,
+        selectedPainter = RichMakerPainter.Home,
+        unselectedPainter =  RichMakerPainter.Home,
         iconTextId = R.string.home,
         titleTextId = R.string.home,
         route = Route.HomeRoute
     ),
     Analysis(
-        selectedDrawableId = R.drawable.ic_analysis,
-        unselectedDrawableId = R.drawable.ic_analysis,
+        selectedPainter = RichMakerPainter.Analysis,
+        unselectedPainter = RichMakerPainter.Analysis,
         iconTextId = R.string.analysis,
         titleTextId = R.string.analysis,
         route = Route.AnalysisRoute
     ),
     Transaction(
-        selectedDrawableId = R.drawable.ic_transaction,
-        unselectedDrawableId = R.drawable.ic_transaction,
+        selectedPainter = RichMakerPainter.Transaction,
+        unselectedPainter = RichMakerPainter.Transaction,
         iconTextId = R.string.transaction,
         titleTextId = R.string.transaction,
         route = Route.TransactionRoute
     ),
     Categories(
-        selectedDrawableId = R.drawable.ic_category,
-        unselectedDrawableId = R.drawable.ic_category,
+        selectedPainter = RichMakerPainter.Categories,
+        unselectedPainter = RichMakerPainter.Categories,
         iconTextId = R.string.categories,
         titleTextId = R.string.categories,
         route = Route.CategoriesRoute,
         baseRoute = Route.CategoryBaseRoute,
     ),
     Profile(
-        selectedDrawableId = R.drawable.ic_profile,
-        unselectedDrawableId = R.drawable.ic_profile,
+        selectedPainter = RichMakerPainter.Profile,
+        unselectedPainter = RichMakerPainter.Profile,
         iconTextId = R.string.profile,
         titleTextId = R.string.profile,
         route = Route.ProfileRoute
