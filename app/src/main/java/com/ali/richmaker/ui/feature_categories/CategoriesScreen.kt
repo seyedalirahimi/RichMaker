@@ -1,7 +1,6 @@
 package com.ali.richmaker.ui.feature_categories
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,7 +17,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ali.richmaker.data.local.database.model.CategoryEntity
 
 @Composable
-fun CategoriesScreenRoot(
+fun CategoriesRoute(
     categoriesViewModel: CategoriesViewModel = hiltViewModel(),
     onCategoryClick: (Int) -> Unit,
     modifier: Modifier = Modifier,

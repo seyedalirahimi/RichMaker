@@ -6,6 +6,7 @@ import androidx.room.Transaction
 import androidx.room.Upsert
 import com.ali.richmaker.data.local.database.model.TransactionWithCategoryModel
 import com.ali.richmaker.data.local.database.model.TransactionEntity
+import com.ali.richmaker.data.local.database.model.TransactionsInMonthModel
 import kotlinx.coroutines.flow.Flow
 
 
@@ -17,6 +18,11 @@ interface TransactionDao {
     @Transaction
     @Query("SELECT * FROM transactions")
     fun getTransactionsWithCategory(): Flow<List<TransactionWithCategoryModel>>
+
+    @Transaction
+    @Query("SELECT * FROM transactions WHERE categoryId = :categoryId")
+    fun getTransactionsByCategory(categoryId: Int): Flow<List<TransactionWithCategoryModel>>
+
 
     @Query("SELECT COALESCE(SUM(amount), 0) FROM transactions WHERE isIncome = 1")
     fun getTotalIncome(): Flow<Double>

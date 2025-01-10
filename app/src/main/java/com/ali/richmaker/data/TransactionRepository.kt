@@ -21,6 +21,7 @@ interface TransactionRepository {
     fun getTotalExpense(): Flow<Double>
     fun getBalance(): Flow<Double>
     fun getTransactionsGroupedByMonth(): Flow<List<TransactionsInMonthModel>>
+    fun getTransactionsByCategory(categoryId: Int): Flow<List<TransactionWithCategoryModel>>
 }
 
 
@@ -59,13 +60,17 @@ class DefaultTransactionRepository @Inject constructor(
     override fun getTransactionsGroupedByMonth(): Flow<List<TransactionsInMonthModel>> {
         return transactionDao.getTransactionsWithCategory().map { transactions ->
             transactions.groupBy { transaction ->
-                transaction.transactionEntity.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-                    .format(monthFormatter)
+                transaction.transactionEntity.date.toInstant().atZone(ZoneId.systemDefault())
+                    .toLocalDate().format(monthFormatter)
             }.map { (month, transactionsInMonth) ->
                 TransactionsInMonthModel(
                     month = month, transactions = transactionsInMonth
                 )
             }.sortedByDescending { it.month }
         }
+    }
+
+    override fun getTransactionsByCategory(categoryId: Int): Flow<List<TransactionWithCategoryModel>> {
+        return transactionDao.getTransactionsByCategory(categoryId)
     }
 }

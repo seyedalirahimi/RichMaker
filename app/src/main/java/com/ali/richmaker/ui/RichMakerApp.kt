@@ -18,7 +18,13 @@ fun RichMakerApp(modifier: Modifier = Modifier) {
         val topLevelDestinations: List<TopLevelDestination> = TopLevelDestination.entries
 
 
-        Scaffold(bottomBar = { RichMakerBottomBar(navController, topLevelDestinations) }) { padding ->
+        Scaffold(bottomBar = {
+            RichMakerBottomBar(
+                navController = navController,
+                modifier = Modifier,
+                items = topLevelDestinations
+            )
+        }) { padding ->
             RichMakerNavGraph(navController, modifier.padding(padding))
         }
 

@@ -1,17 +1,22 @@
 package com.ali.richmaker.ui
 
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.ali.richmaker.ui.navigation.TopLevelDestination
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun RichMakerBottomBar(
     navController: NavController,
+    modifier: Modifier = Modifier,
     items: List<TopLevelDestination>
 ) {
     NavigationBar {
@@ -19,15 +24,16 @@ fun RichMakerBottomBar(
 
         items.forEach { destination ->
 
-            val destinationName =  destination.route::class.qualifiedName
+            val destinationName = destination.route::class.qualifiedName
             val selected = currentRoute == destinationName
-           NavigationBarItem(
-                icon = {
-                    Icon(
-                        if (selected) destination.selectedIcon else destination.unselectedIcon,
-                        contentDescription = stringResource(destination.iconTextId)
-                    )
-                },
+            NavigationBarItem(icon = {
+                Icon(
+                    painter = painterResource(
+                        if (selected) destination.selectedDrawableId else destination.unselectedDrawableId
+                    ), contentDescription = stringResource(destination.iconTextId),
+                    modifier = modifier.size(24.dp)
+                )
+            },
                 label = { stringResource(destination.titleTextId) },
                 selected = selected,
                 onClick = {
@@ -43,8 +49,7 @@ fun RichMakerBottomBar(
                             launchSingleTop = true
                         }
                     }
-                }
-            )
+                })
         }
     }
 }
