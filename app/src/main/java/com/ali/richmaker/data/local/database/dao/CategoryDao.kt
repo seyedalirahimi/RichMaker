@@ -15,6 +15,9 @@ interface CategoryDao {
     @Query("SELECT * FROM categories")
     fun getAllCategories(): Flow<List<CategoryEntity>>
 
+    @Query ("SELECT * FROM categories WHERE id = :id")
+    fun getCategoryById(id: Int): Flow<CategoryEntity>
+
     @Query("SELECT * FROM categories WHERE isPredefined = 1")
     fun getPredefinedCategories(): Flow<List<CategoryEntity>>
 

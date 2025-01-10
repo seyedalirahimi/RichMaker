@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ali.richmaker.data.local.database.dao.CategoryDao
 import com.ali.richmaker.data.local.database.model.CategoryEntity
+import com.ali.richmaker.domain.GetAddCategoriesUseCase
+import com.ali.richmaker.domain.GetCategoryByIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -13,10 +15,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoriesViewModel @Inject constructor(
-    categoryDao: CategoryDao,
+    getAddCategoriesUseCase: GetAddCategoriesUseCase,
 ) : ViewModel() {
     val state: StateFlow<CategoriesUiState> =
-        categoryDao.getAllCategories().map { categories ->
+        getAddCategoriesUseCase().map { categories ->
             CategoriesUiState(categories = categories)
         }.stateIn(
             scope = viewModelScope,
