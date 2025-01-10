@@ -25,20 +25,36 @@ class DatabaseModule {
     @Singleton
     fun provideAppDatabase(@ApplicationContext appContext: Context): RichMakerDatabase {
 
-        val predefinedCategories = listOf(
-            "Salary", "Food", "Transportation", "Entertainment", "Healthcare", "Education", "Other"
+        val predefinedIncomeCategories = listOf(
+            "Salary", "Business", "Investments", "Government Support", "Gifts", "Other"
         )
+        val predefinedExpenseCategories = listOf(
+            "Housing", "Utilities", "Food", "Transportation", "Healthcare", "Debt Payments",
+            "Lifestyle",
+            "Travel",
+            "Education",
+            "Personal Care",
+            "Savings",
+            "Investments",
+            "Family Support",
+            "Charity",
+            "Gifts",
+            "Other",
+
+            )
 
 
         val predefinedTransactions = List(100) { // Generate 100 random transactions
-            val randomCategory = predefinedCategories.random() // Pick a random category
             val randomAmount = Random.nextDouble(
-                -5000.0,
-                5000.0
-            ) // Generate a random amount between -5000 and 5000
-            val isIncome = randomAmount > 0 // Treat positive amounts as income
+                -5000.0, 5000.0
+            )
+            val randomCategory = if (randomAmount >= 0) {
+                predefinedIncomeCategories.random()
+            } else {
+                predefinedExpenseCategories.random()
+            }
             val randomTime = getRandomTime() // Get a random date and time
-            Quadruple(randomCategory, randomAmount, isIncome, randomTime) // Include random date
+            Triple(randomCategory, randomAmount, randomTime) // Include random date
         }
 
         return Room.databaseBuilder(
@@ -48,13 +64,17 @@ class DatabaseModule {
                 super.onCreate(db)
                 CoroutineScope(Dispatchers.IO).launch {
 
-                    // Insert predefined categories
-                    predefinedCategories.forEach { categoryName ->
-                        db.execSQL("INSERT INTO categories (name, isPredefined) VALUES ('$categoryName', 1)")
+                    predefinedIncomeCategories.forEach { categoryName ->
+                        db.execSQL("INSERT INTO categories (name, isIncome, isPredefined) VALUES ('$categoryName', TRUE, 1)")
                     }
 
+                    predefinedExpenseCategories.forEach { categoryName ->
+                        db.execSQL("INSERT INTO categories (name, isIncome, isPredefined) VALUES ('$categoryName', FALSE, 1)")
+                    }
+
+
                     // Insert predefined transactions
-                    predefinedTransactions.forEach { (categoryName, amount, isIncome, time) ->
+                    predefinedTransactions.forEach { (categoryName, amount, time) ->
                         // Fetch the ID of the category to associate with the transaction
                         val cursor = db.query(
                             "SELECT id FROM categories WHERE name = ?", arrayOf(categoryName)
@@ -63,14 +83,13 @@ class DatabaseModule {
                             val categoryId = cursor.getInt(0)
                             db.execSQL(
                                 """
-                        INSERT INTO transactions (date, categoryId, amount, title, message, isIncome) 
+                        INSERT INTO transactions (date, categoryId, amount, title, message) 
                         VALUES (
                             ${time}, 
                             $categoryId, 
                             $amount, 
                             '${categoryName} Transaction', 
-                            NULL, 
-                            ${if (isIncome) 1 else 0}
+                            NULL
                         )
                     """.trimIndent()
                             )
@@ -88,11 +107,4 @@ class DatabaseModule {
         val twoMonthsAgo = now - (60L * 24 * 60 * 60 * 1000) // Approx. 60 days in milliseconds
         return Random.nextLong(twoMonthsAgo, now) // Random time in range
     }
-
-    data class Quadruple<T1, T2, T3, T4>(
-        val first: T1,
-        val second: T2,
-        val third: T3,
-        val fourth: T4
-    )
 }

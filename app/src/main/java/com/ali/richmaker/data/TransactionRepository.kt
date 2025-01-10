@@ -16,12 +16,13 @@ import javax.inject.Inject
 
 interface TransactionRepository {
     suspend fun upsertTransaction(transaction: TransactionEntity)
-    fun getTransactionsWithCategories(): Flow<List<TransactionWithCategoryModel>>
-    fun getTotalIncome(): Flow<Double>
-    fun getTotalExpense(): Flow<Double>
-    fun getBalance(): Flow<Double>
-    fun getTransactionsGroupedByMonth(): Flow<List<TransactionsInMonthModel>>
+    fun getAllTransactions(): Flow<List<TransactionWithCategoryModel>>
+    fun getAllIncomeTransactions(): Flow<List<TransactionWithCategoryModel>>
+    fun getAllExpenseTransactions(): Flow<List<TransactionWithCategoryModel>>
     fun getTransactionsByCategory(categoryId: Int): Flow<List<TransactionWithCategoryModel>>
+    fun getIncome(): Flow<Double>
+    fun getExpense(): Flow<Double>
+    fun getBalance(): Flow<Double>
 }
 
 
@@ -29,7 +30,6 @@ class DefaultTransactionRepository @Inject constructor(
     private val transactionDao: TransactionDao,
     @Dispatcher(RichMakerDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
 ) : TransactionRepository {
-    private val monthFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("MMMM yyyy")
 
     override suspend fun upsertTransaction(transaction: TransactionEntity) {
         withContext(ioDispatcher) {
@@ -37,17 +37,29 @@ class DefaultTransactionRepository @Inject constructor(
         }
     }
 
-    override fun getTransactionsWithCategories(): Flow<List<TransactionWithCategoryModel>> {
-        return transactionDao.getTransactionsWithCategory()
+    override fun getAllTransactions(): Flow<List<TransactionWithCategoryModel>> {
+        return transactionDao.getAllTransactions()
 
     }
 
-    override fun getTotalIncome(): Flow<Double> {
+    override fun getAllIncomeTransactions(): Flow<List<TransactionWithCategoryModel>> {
+        return transactionDao.getAllIncomeTransactions()
+    }
+
+    override fun getAllExpenseTransactions(): Flow<List<TransactionWithCategoryModel>> {
+        return transactionDao.getAllExpenseTransactions()
+    }
+
+    override fun getTransactionsByCategory(categoryId: Int): Flow<List<TransactionWithCategoryModel>> {
+        return transactionDao.getTransactionsByCategory(categoryId)
+    }
+
+    override fun getIncome(): Flow<Double> {
         return transactionDao.getTotalIncome()
 
     }
 
-    override fun getTotalExpense(): Flow<Double> {
+    override fun getExpense(): Flow<Double> {
         return transactionDao.getTotalExpense()
 
     }
@@ -55,22 +67,5 @@ class DefaultTransactionRepository @Inject constructor(
     override fun getBalance(): Flow<Double> {
         return transactionDao.getBalance()
 
-    }
-
-    override fun getTransactionsGroupedByMonth(): Flow<List<TransactionsInMonthModel>> {
-        return transactionDao.getTransactionsWithCategory().map { transactions ->
-            transactions.groupBy { transaction ->
-                transaction.transactionEntity.date.toInstant().atZone(ZoneId.systemDefault())
-                    .toLocalDate().format(monthFormatter)
-            }.map { (month, transactionsInMonth) ->
-                TransactionsInMonthModel(
-                    month = month, transactions = transactionsInMonth
-                )
-            }.sortedByDescending { it.month }
-        }
-    }
-
-    override fun getTransactionsByCategory(categoryId: Int): Flow<List<TransactionWithCategoryModel>> {
-        return transactionDao.getTransactionsByCategory(categoryId)
     }
 }

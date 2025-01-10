@@ -2,10 +2,8 @@ package com.ali.richmaker.ui.feature_categories
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ali.richmaker.data.local.database.dao.CategoryDao
 import com.ali.richmaker.data.local.database.model.CategoryEntity
-import com.ali.richmaker.domain.GetAddCategoriesUseCase
-import com.ali.richmaker.domain.GetCategoryByIdUseCase
+import com.ali.richmaker.domain.category.GetAddCategoriesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

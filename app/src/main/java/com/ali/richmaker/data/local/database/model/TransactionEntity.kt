@@ -20,7 +20,6 @@ data class TransactionEntity(
     val categoryId: Int,
     val amount: Double,
     val title: String,
-    val message: String? = null,
-    val isIncome: Boolean
+    val message: String? = null
 )
 

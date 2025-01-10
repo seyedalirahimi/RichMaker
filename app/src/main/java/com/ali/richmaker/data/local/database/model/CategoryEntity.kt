@@ -9,6 +9,7 @@ data class CategoryEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val name: String,
+    val isIncome: Boolean = true,
     val isPredefined: Boolean // True for predefined categories, false for user-added
 )
 

@@ -1,4 +1,4 @@
-package com.ali.richmaker.domain
+package com.ali.richmaker.domain.category
 
 import com.ali.richmaker.data.local.database.dao.CategoryDao
 import javax.inject.Inject

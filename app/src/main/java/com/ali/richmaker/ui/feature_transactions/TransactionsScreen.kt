@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,11 +34,14 @@ import java.util.Locale
 
 @Composable
 fun TransactionsRoute(
-    transactionsViewModel: TransactionsViewModel = hiltViewModel(), modifier: Modifier = Modifier
+    viewModel: TransactionsViewModel = hiltViewModel(), modifier: Modifier = Modifier
 ) {
-    val transactionsUiState = transactionsViewModel.state.collectAsStateWithLifecycle()
+    val uiState = viewModel.state.collectAsStateWithLifecycle()
     TransactionsScreen(
-        uiState = transactionsUiState.value,
+        uiState = uiState.value,
+        onBalanceClick = { viewModel.onEvent(TransactionEvent.OnBalanceClick) },
+        onIncomeClick = { viewModel.onEvent(TransactionEvent.OnIncomeClick) },
+        onExpenseClick = { viewModel.onEvent(TransactionEvent.OnExpenseClick) },
         modifier = modifier,
     )
 }
@@ -46,25 +50,40 @@ fun TransactionsRoute(
 @Composable
 fun TransactionsScreen(
     uiState: TransactionsUiState = TransactionsUiState(),
+    onBalanceClick: () -> Unit = {},
+    onIncomeClick: () -> Unit = {},
+    onExpenseClick: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
-    if (uiState.isLoading) {
-        Text(text = "Loading...")
-    } else {
+
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = "Balance: ${uiState.totalBalance.let { "$$it" }}"
-            )
-
-            Text(
-                text = "Total Income: ${uiState.totalIncome.let { "$$it" }}",
-
+            TextButton(
+                onClick = onBalanceClick
+            ) {
+                Text(
+                    color = if (uiState.transactionsFilterMode == TransactionsFilterMode.Balance) Color.Blue else Color.Black,
+                    text = "Balance: ${uiState.totalBalance.let { "$$it" }}"
                 )
+            }
 
-            Text(
-                text = "Total Expense: ${uiState.totalExpense.let { "$$it" }}",
-
+            TextButton(
+                onClick = onIncomeClick
+            ) {
+                Text(
+                    color = if (uiState.transactionsFilterMode == TransactionsFilterMode.Income) Color.Blue else Color.Black,
+                    text = "Income: ${uiState.totalIncome.let { "$$it" }}"
                 )
+            }
+
+            TextButton(
+                onClick = onExpenseClick
+            ) {
+                Text(
+                    color = if (uiState.transactionsFilterMode == TransactionsFilterMode.Expense) Color.Blue else Color.Black,
+                    text = "Expense: ${uiState.totalExpense.let { "$$it" }}"
+                )
+            }
+
             Text(text = "Transactions:")
             if (uiState.transactions.isEmpty()) {
                 Text(text = "No transactions available.")
@@ -78,7 +97,7 @@ fun TransactionsScreen(
                         transactionInMonth.transactions.forEach { transaction ->
                             item {
                                 TransactionItem(
-                                    imageResourceId =  R.drawable.ic_profile ,
+                                    imageResourceId = R.drawable.ic_profile,
                                     title = transaction.transactionEntity.title,
                                     date = transaction.transactionEntity.date,
                                     category = transaction.categoryEntity.name,
@@ -88,8 +107,8 @@ fun TransactionsScreen(
                             }
                         }
                     }
+
                 }
-            }
         }
 
     }
@@ -109,8 +128,7 @@ fun TransactionItem(
             .fillMaxWidth()
             .padding(12.dp)
             .background(Color(0xFFEFF8F1)) // Background color
-            .padding(12.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .padding(12.dp), verticalAlignment = Alignment.CenterVertically
     ) {
         // Icon Section
         Box(

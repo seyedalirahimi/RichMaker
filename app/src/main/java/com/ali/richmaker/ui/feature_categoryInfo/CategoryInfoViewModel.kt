@@ -3,13 +3,10 @@ package com.ali.richmaker.ui.feature_categoryInfo
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.toRoute
 import com.ali.richmaker.data.local.database.model.TransactionWithCategoryModel
-import com.ali.richmaker.data.local.database.model.TransactionsInMonthModel
-import com.ali.richmaker.domain.GetCategoryByIdUseCase
-import com.ali.richmaker.domain.GetTransactionsByCategoryUseCase
-import com.ali.richmaker.ui.feature_transactions.TransactionsUiState
+import com.ali.richmaker.domain.category.GetCategoryByIdUseCase
+import com.ali.richmaker.domain.category.GetTransactionsByCategoryUseCase
 import com.ali.richmaker.ui.navigation.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
