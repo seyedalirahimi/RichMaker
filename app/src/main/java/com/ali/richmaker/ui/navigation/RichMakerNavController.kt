@@ -3,9 +3,11 @@ package com.ali.richmaker.ui.navigation
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import com.ali.richmaker.ui.feature_categories.CategoriesRoute
 import com.ali.richmaker.ui.feature_categoryInfo.CategoryInfoRoute
 import com.ali.richmaker.ui.feature_transactions.TransactionsRoute
@@ -27,6 +29,9 @@ sealed class Route {
     data object CategoriesRoute : Route()
 
     @Serializable
+    data object CategoryBaseRoute : Route()
+
+    @Serializable
     data object ProfileRoute : Route()
 
     @Serializable
@@ -40,32 +45,49 @@ fun RichMakerNavGraph(
     NavHost(
         navController = navController, startDestination = Route.HomeRoute, modifier = modifier
     ) {
-        composable<Route.HomeRoute> {
-            Text("Home")
-        }
+        addHomeRoute()
+        addAnalysisRoute()
+        addTransactionRoute()
+        addCategoriesSection(navController)
+        addProfileRoute()
+    }
+}
 
-        composable<Route.AnalysisRoute> {
-            Text(
-                text = "Analysis"
-            )
-        }
-        composable<Route.TransactionRoute> {
-            TransactionsRoute()
-        }
+private fun NavGraphBuilder.addHomeRoute() {
+    composable<Route.HomeRoute> {
+        Text("Home")
+    }
+}
+
+private fun NavGraphBuilder.addAnalysisRoute() {
+    composable<Route.AnalysisRoute> {
+        Text("Analysis")
+    }
+}
+
+private fun NavGraphBuilder.addTransactionRoute() {
+    composable<Route.TransactionRoute> {
+        TransactionsRoute()
+    }
+}
+
+private fun NavGraphBuilder.addCategoriesSection(navController: NavHostController) {
+    navigation<Route.CategoryBaseRoute>(
+        startDestination = Route.CategoriesRoute
+    ) {
         composable<Route.CategoriesRoute> {
             CategoriesRoute(onCategoryClick = { categoryId ->
                 navController.navigate(route = Route.CategoryInfoRoute(categoryId))
             })
         }
-        composable<Route.CategoryInfoRoute> { categoryInfoRoute ->
+        composable<Route.CategoryInfoRoute> {
             CategoryInfoRoute()
         }
-        composable<Route.ProfileRoute> {
-            Text(
-                text = "Profile"
-            )
-        }
+    }
+}
 
-
+private fun NavGraphBuilder.addProfileRoute() {
+    composable<Route.ProfileRoute> {
+        Text("Profile")
     }
 }

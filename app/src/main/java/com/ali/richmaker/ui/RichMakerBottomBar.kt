@@ -12,25 +12,27 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.ali.richmaker.ui.navigation.TopLevelDestination
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavDestination.Companion.hierarchy
 
 @Composable
 fun RichMakerBottomBar(
-    navController: NavController,
-    modifier: Modifier = Modifier,
-    items: List<TopLevelDestination>
+    navController: NavController, modifier: Modifier = Modifier, items: List<TopLevelDestination>
 ) {
     NavigationBar {
-        val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+        val currentDestination = navController.currentBackStackEntryAsState().value?.destination
 
         items.forEach { destination ->
 
-            val destinationName = destination.route::class.qualifiedName
-            val selected = currentRoute == destinationName
+            val destinationName = destination.baseRoute::class.qualifiedName
+            val selected =
+                currentDestination?.hierarchy?.any { it.route == destinationName } ?: false
+
             NavigationBarItem(icon = {
                 Icon(
                     painter = painterResource(
                         if (selected) destination.selectedDrawableId else destination.unselectedDrawableId
-                    ), contentDescription = stringResource(destination.iconTextId),
+                    ),
+                    contentDescription = stringResource(destination.iconTextId),
                     modifier = modifier.size(24.dp)
                 )
             },

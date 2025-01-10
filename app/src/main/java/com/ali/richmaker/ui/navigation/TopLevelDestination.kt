@@ -9,7 +9,8 @@ enum class TopLevelDestination(
     @DrawableRes val unselectedDrawableId: Int,
     @StringRes val iconTextId: Int,
     @StringRes val titleTextId: Int,
-    val route: Route
+    val route: Route,
+    val baseRoute: Route = route,
 ) {
     Home(
         selectedDrawableId = R.drawable.ic_home,
@@ -37,7 +38,8 @@ enum class TopLevelDestination(
         unselectedDrawableId = R.drawable.ic_category,
         iconTextId = R.string.categories,
         titleTextId = R.string.categories,
-        route = Route.CategoriesRoute
+        route = Route.CategoriesRoute,
+        baseRoute = Route.CategoryBaseRoute,
     ),
     Profile(
         selectedDrawableId = R.drawable.ic_profile,
