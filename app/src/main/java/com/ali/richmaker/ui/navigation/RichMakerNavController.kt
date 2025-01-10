@@ -81,7 +81,7 @@ private fun NavGraphBuilder.addCategoriesSection(navController: NavHostControlle
             })
         }
         composable<Route.CategoryInfoRoute> {
-            CategoryInfoRoute()
+            CategoryInfoRoute(onBackClick = { navController.popBackStack() })
         }
     }
 }

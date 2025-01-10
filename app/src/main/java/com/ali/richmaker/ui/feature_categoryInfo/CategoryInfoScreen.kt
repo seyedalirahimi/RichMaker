@@ -1,5 +1,6 @@
 package com.ali.richmaker.ui.feature_categoryInfo
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -12,19 +13,25 @@ import com.ali.richmaker.ui.feature_transactions.TransactionItem
 
 @Composable
 fun CategoryInfoRoute(
-    categoryInfoViewModel: CategoryInfoViewModel = hiltViewModel(), modifier: Modifier = Modifier
+    categoryInfoViewModel: CategoryInfoViewModel = hiltViewModel(),
+    onBackClick: () -> Unit ,
+    modifier: Modifier = Modifier
 ) {
     val uiState = categoryInfoViewModel.state.collectAsStateWithLifecycle()
     CategoryInfo(
         uiState = uiState.value,
+        onBackClick = onBackClick,
         modifier = modifier
     )
 }
 
 @Composable
 fun CategoryInfo(
-    uiState: CategoryInfoUiState, modifier: Modifier = Modifier
+    uiState: CategoryInfoUiState,
+    onBackClick: () -> Unit = {},
+    modifier: Modifier = Modifier
 ) {
+    BackHandler(onBack = onBackClick)
     if (uiState.transactions.isEmpty()) {
         Text(text = "No transactions available.")
     } else {
@@ -32,7 +39,7 @@ fun CategoryInfo(
             uiState.transactions.forEach { transaction ->
                 item {
                     TransactionItem(
-                        imageResourceId =  R.drawable.ic_transaction ,
+                        imageResourceId = R.drawable.ic_transaction,
                         title = transaction.transactionEntity.title,
                         date = transaction.transactionEntity.date,
                         category = transaction.categoryEntity.name,
