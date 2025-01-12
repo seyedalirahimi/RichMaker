@@ -4,7 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.painter.Painter
 import com.ali.richmaker.R
-import com.ali.richmaker.ui.theme.RichMakerPainter
+import com.ali.richmaker.common.designsystem.icon.RichMakerPainter
 
 enum class TopLevelDestination(
     val selectedPainter: @Composable () -> Painter,

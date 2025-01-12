@@ -1,4 +1,4 @@
-package com.ali.richmaker.ui.feature_categories
+package com.ali.richmaker.ui.categories
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

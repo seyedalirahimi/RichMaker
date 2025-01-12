@@ -1,4 +1,4 @@
-package com.ali.richmaker.ui.feature_transactions
+package com.ali.richmaker.ui.transactions
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

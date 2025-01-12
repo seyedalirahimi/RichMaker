@@ -1,6 +1,5 @@
-package com.ali.richmaker.ui.theme
+package com.ali.richmaker.common.designsystem.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -12,16 +11,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = Cyprus,
+    secondary = FenceGreen,
+    tertiary = Void,
+    onPrimary = LightBlue,
+    onSecondary = VividBlue,
+    onTertiary = OceanBlue,
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
+    primary = HoneyDraw,
+    secondary = LightGreen,
+    tertiary = CaribbeanGreen,
+    onPrimary = LightBlue,
+    onSecondary = VividBlue,
+    onTertiary = OceanBlue,
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
     surface = Color(0xFFFFFBFE),
@@ -37,7 +41,7 @@ private val LightColorScheme = lightColorScheme(
 fun RichMakerTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

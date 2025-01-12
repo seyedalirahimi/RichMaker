@@ -1,4 +1,4 @@
-package com.ali.richmaker.ui.theme
+package com.ali.richmaker.common.designsystem.icon
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource

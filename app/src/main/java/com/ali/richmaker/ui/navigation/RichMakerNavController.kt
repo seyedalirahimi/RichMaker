@@ -8,9 +8,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.ali.richmaker.ui.feature_categories.CategoriesRoute
-import com.ali.richmaker.ui.feature_categoryInfo.CategoryInfoRoute
-import com.ali.richmaker.ui.feature_transactions.TransactionsRoute
+import com.ali.richmaker.ui.categories.CategoriesRoute
+import com.ali.richmaker.ui.categoryinfo.CategoryInfoRoute
+import com.ali.richmaker.ui.transactions.TransactionsRoute
 import kotlinx.serialization.Serializable
 
 

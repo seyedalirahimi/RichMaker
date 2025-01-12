@@ -1,4 +1,4 @@
-package com.ali.richmaker.ui.feature_categoryInfo
+package com.ali.richmaker.ui.categoryinfo
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

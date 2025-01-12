@@ -1,4 +1,4 @@
-package com.ali.richmaker.ui.feature_categories
+package com.ali.richmaker.ui.categories
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize

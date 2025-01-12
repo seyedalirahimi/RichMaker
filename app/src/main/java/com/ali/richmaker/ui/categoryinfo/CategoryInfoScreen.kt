@@ -1,4 +1,4 @@
-package com.ali.richmaker.ui.feature_categoryInfo
+package com.ali.richmaker.ui.categoryinfo
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ali.richmaker.R
-import com.ali.richmaker.ui.feature_transactions.TransactionItem
+import com.ali.richmaker.ui.transactions.TransactionItem
 
 
 @Composable

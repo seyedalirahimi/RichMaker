@@ -1,4 +1,4 @@
-package com.ali.richmaker.ui.theme
+package com.ali.richmaker.common.designsystem.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
