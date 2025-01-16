@@ -32,6 +32,7 @@ import com.ali.richmaker.common.designsystem.component.CurrencyText
 import com.ali.richmaker.common.designsystem.component.FinancialIconButton
 import com.ali.richmaker.common.designsystem.icon.RichMakerPainter
 import com.ali.richmaker.common.designsystem.icon.getCategoryIcon
+import com.ali.richmaker.ui.component.TransactionItem
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -146,77 +147,5 @@ fun TransactionsScreen(
     }
 }
 
-@Composable
-fun TransactionItem(
-    title: String, date: Date, category: String, amount: Double, modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 4.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier
-                .size(48.dp)
-                .background(MaterialTheme.colorScheme.onPrimary, RoundedCornerShape(percent = 35)),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                painter = RichMakerPainter.getCategoryIcon(category)(),
-                tint = Color.White,
-                contentDescription = null,
-                modifier = modifier.size(24.dp)
-            )
-        }
-
-        Spacer(modifier = Modifier.size(8.dp))
-
-        Column {
-            Text(
-                text = category, style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                text = formatDateToCustomFormat(date),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onTertiary
-            )
-        }
-        Spacer(modifier = Modifier.weight(1f))
-        VerticalDivider(
-            modifier = Modifier
-                .width(4.dp)
-                .height(40.dp),
-            color = MaterialTheme.colorScheme.tertiary
-        )
-        Spacer(modifier = Modifier.weight(1f))
-
-        Text(
-            text = title,
-            style = MaterialTheme.typography.bodySmall,
-        )
-        Spacer(modifier = Modifier.weight(1f))
-        VerticalDivider(
-            modifier = Modifier
-                .width(4.dp)
-                .height(40.dp),
-            color = MaterialTheme.colorScheme.tertiary
-        )
-        Spacer(modifier = Modifier.weight(1f))
-
-        CurrencyText(
-            amount = amount,
-            fontSize = 14.sp,
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = modifier
-
-        )
-    }
-}
-
-fun formatDateToCustomFormat(date: Date): String {
-    val dateFormat = SimpleDateFormat("HH:mm - MMMM dd", Locale.getDefault())
-    return dateFormat.format(date)
-}
 
 

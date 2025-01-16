@@ -108,6 +108,7 @@ class TransactionsViewModel @Inject constructor(
 
 // UI State
 data class TransactionsUiState(
+    // fixme: add pagination for items
     val transactionsFilterMode: TransactionsFilterMode = TransactionsFilterMode.Balance,
     val transactions: List<TransactionsInMonthModel> = emptyList(),
     val totalBalance: Double = 0.0,
