@@ -100,7 +100,7 @@ fun FinancialIconButton(
             val isIncome = amount >= 0
             if (hasIcon) {
                 Icon(
-                    painter = if (isIncome) RichMakerPainter.Income() else RichMakerPainter.Expose(),
+                    painter = if (isIncome) RichMakerPainter.Income() else RichMakerPainter.Expense(),
                     contentDescription = label,
                     tint = if (isEnable) Color.White else if (isIncome) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onTertiary,
                     modifier = Modifier.size(20.dp)

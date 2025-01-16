@@ -12,7 +12,7 @@ object RichMakerPainter{
     val Profile = @Composable { painterResource(id = R.drawable.ic_profile) }
     val Transaction = @Composable { painterResource(id = R.drawable.ic_transaction) }
     val Income = @Composable { painterResource(id = R.drawable.ic_income) }
-    val Expose = @Composable { painterResource(id = R.drawable.ic_expose) }
+    val Expense = @Composable { painterResource(id = R.drawable.ic_expose) }
     val Allowance = @Composable { painterResource(id = R.drawable.ic_allowance) }
     val Apparel = @Composable { painterResource(id = R.drawable.ic_apparel) }
     val Beauty = @Composable { painterResource(id = R.drawable.ic_beauty) }

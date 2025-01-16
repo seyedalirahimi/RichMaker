@@ -18,7 +18,7 @@ import java.util.Locale
 fun CurrencyText(
     amount: Double = 0.0,
     fontSize: TextUnit = 12.sp,
-    style: TextStyle = MaterialTheme.typography.bodyMedium,
+    style: TextStyle = MaterialTheme.typography.bodyLarge,
     color: Color = if (amount >= 0) Color.Black else MaterialTheme.colorScheme.onPrimary,
     modifier: Modifier = Modifier,
 
@@ -27,7 +27,11 @@ fun CurrencyText(
     val formatted = currencyFormatter.format(amount)
 
     Text(
-        text = formatted, fontSize = fontSize, modifier = modifier, style = style, color = color
+        text = formatted,
+        fontSize = fontSize,
+        modifier = modifier,
+        style = style,
+        color = color
     )
 }
 
