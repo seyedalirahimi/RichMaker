@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,6 +19,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -58,105 +60,95 @@ fun TransactionsScreen(
     modifier: Modifier = Modifier,
 ) {
 
-    Column(
+    LazyColumn(
         modifier = modifier.background(MaterialTheme.colorScheme.tertiary),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.size(8.dp))
-        Text(
-            text = "Transactions",
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Medium,
-        )
-        Spacer(modifier = Modifier.size(8.dp))
-
-        Column(
-            modifier = modifier.padding(
-                horizontal = 16.dp, vertical = 8.dp
-            )
-        ) {
-            FinancialIconButton(
-                label = "Total Balance",
-                isEnable = uiState.transactionsFilterMode == TransactionsFilterMode.Balance,
-                amount = uiState.totalBalance,
-                hasIcon = false,
-                modifier = modifier.fillMaxWidth(),
-                onClick = onBalanceClick
+        item(key = "header") {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(modifier = Modifier.size(8.dp))
+                Text(
+                    text = "Transactions",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium,
                 )
+                Spacer(modifier = Modifier.size(8.dp))
 
-            Spacer(modifier = modifier.size(12.dp))
+                Column(
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                ) {
+                    FinancialIconButton(
+                        label = "Total Balance",
+                        isEnable = uiState.transactionsFilterMode == TransactionsFilterMode.Balance,
+                        amount = uiState.totalBalance,
+                        hasIcon = false,
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = onBalanceClick
+                    )
 
-            Row(modifier = Modifier.fillMaxWidth()) {
-                FinancialIconButton(
-                    label = "Income",
-                    isEnable = uiState.transactionsFilterMode == TransactionsFilterMode.Income,
-                    amount = uiState.totalIncome,
-                    modifier = Modifier.weight(1f),
-                    onClick = onIncomeClick
-                )
-                Spacer(Modifier.size(8.dp))
-                FinancialIconButton(
-                    label = "Expense",
-                    isEnable = uiState.transactionsFilterMode == TransactionsFilterMode.Expense,
-                    amount = uiState.totalExpense,
-                    modifier = Modifier.weight(1f),
-                    onClick = onExpenseClick
-                )
+                    Spacer(modifier = Modifier.size(12.dp))
+
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        FinancialIconButton(
+                            label = "Income",
+                            isEnable = uiState.transactionsFilterMode == TransactionsFilterMode.Income,
+                            amount = uiState.totalIncome,
+                            modifier = Modifier.weight(1f),
+                            onClick = onIncomeClick
+                        )
+                        Spacer(Modifier.size(8.dp))
+                        FinancialIconButton(
+                            label = "Expense",
+                            isEnable = uiState.transactionsFilterMode == TransactionsFilterMode.Expense,
+                            amount = uiState.totalExpense,
+                            modifier = Modifier.weight(1f),
+                            onClick = onExpenseClick
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.size(18.dp))
             }
         }
-        Spacer(modifier = Modifier.size(18.dp))
-        if (uiState.transactions.isEmpty()) {
-            Text(text = "No transactions available.")
-        } else {
+
+        items(
+            count = uiState.transactions.size,
+            key = { index -> uiState.transactions[index].month }) { index ->
+            val transactionInMonth = uiState.transactions[index]
             Column(
                 modifier = Modifier
-                    .background(
-                        color = MaterialTheme.colorScheme.primary,
-                        shape = RoundedCornerShape(topStartPercent = 10, topEndPercent = 10)
-                    )
-                    .padding(
-                        horizontal = 16.dp, vertical = 8.dp
-                    )
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.primary)
             ) {
-                LazyColumn(
-                    modifier = Modifier.padding(8.dp),
-                ) {
-                    uiState.transactions.forEach { transactionInMonth ->
-                        item {
-                            Text(
-                                fontWeight = MaterialTheme.typography.labelMedium.fontWeight,
-                                text = transactionInMonth.month,
-                                modifier = Modifier.padding(8.dp)
-                            )
-                        }
-                        transactionInMonth.transactions.forEach { transaction ->
-                            item {
-                                TransactionItem(
-                                    title = transaction.transactionEntity.title,
-                                    date = transaction.transactionEntity.date,
-                                    category = transaction.categoryEntity.name,
-                                    amount = transaction.transactionEntity.amount,
-                                    modifier = modifier,
-                                )
-                            }
-                        }
-                    }
+                Text(
+                    text = transactionInMonth.month,
+                    fontWeight = MaterialTheme.typography.labelMedium.fontWeight,
+                    modifier = Modifier.padding(8.dp)
+                )
 
+                transactionInMonth.transactions.forEach { transaction ->
+                    key(transaction.transactionEntity.id) {
+                        TransactionItem(
+                            title = transaction.transactionEntity.title,
+                            date = transaction.transactionEntity.date,
+                            category = transaction.categoryEntity.name,
+                            amount = transaction.transactionEntity.amount,
+                            modifier = Modifier.padding(vertical = 4.dp)
+                        )
+                    }
                 }
+
+                Spacer(modifier = Modifier.height(8.dp))
             }
         }
-
     }
 }
 
 @Composable
 fun TransactionItem(
-    title: String,
-    date: Date,
-    category: String,
-    amount: Double,
-    modifier: Modifier = Modifier
+    title: String, date: Date, category: String, amount: Double, modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier
@@ -171,7 +163,8 @@ fun TransactionItem(
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                painter = RichMakerPainter.getCategoryIcon(category)(), tint = Color.White,
+                painter = RichMakerPainter.getCategoryIcon(category)(),
+                tint = Color.White,
                 contentDescription = null,
                 modifier = modifier.size(24.dp)
             )
