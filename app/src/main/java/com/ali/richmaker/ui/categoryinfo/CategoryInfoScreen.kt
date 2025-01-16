@@ -8,8 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ali.richmaker.R
-import com.ali.richmaker.ui.component.TransactionItem
+import com.ali.richmaker.common.designsystem.component.RichMakerTopAppBar
+import com.ali.richmaker.common.designsystem.component.TransactionItem
 
 
 @Composable
@@ -28,25 +28,28 @@ fun CategoryInfoRoute(
 fun CategoryInfo(
     uiState: CategoryInfoUiState, onBackClick: () -> Unit = {}, modifier: Modifier = Modifier
 ) {
-    BackHandler(onBack = onBackClick)
-    if (uiState.transactions.isEmpty()) {
-        Text(text = "No transactions available.")
-    } else {
-        Column {
-            Text(
-                text = uiState.categoryName
-            )
+    Column {
+        RichMakerTopAppBar(
+            title = uiState.categoryName,
+            onBackClick = onBackClick,
+        )
+        if (uiState.transactions.isEmpty()) {
+            Text(text = "No transactions available.")
+        } else {
+            Column {
 
-            LazyColumn {
-                uiState.transactions.forEach { transaction ->
-                    item {
-                        TransactionItem(
-                            title = transaction.transactionEntity.title,
-                            date = transaction.transactionEntity.date,
-                            category = transaction.categoryEntity.name,
-                            amount = transaction.transactionEntity.amount,
-                            modifier = modifier,
-                        )
+
+                LazyColumn {
+                    uiState.transactions.forEach { transaction ->
+                        item {
+                            TransactionItem(
+                                title = transaction.transactionEntity.title,
+                                date = transaction.transactionEntity.date,
+                                category = transaction.categoryEntity.name,
+                                amount = transaction.transactionEntity.amount,
+                                modifier = modifier,
+                            )
+                        }
                     }
                 }
             }

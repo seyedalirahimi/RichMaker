@@ -43,31 +43,31 @@ fun RichMakerNavGraph(
     navController: NavHostController, modifier: Modifier = Modifier
 ) {
     NavHost(
-        navController = navController, startDestination = Route.HomeRoute, modifier = modifier
+        navController = navController, startDestination = Route.TransactionRoute, modifier = modifier
     ) {
-        addHomeRoute()
-        addAnalysisRoute()
-        addTransactionRoute()
+        addHomeRoute(navController)
+        addAnalysisRoute(navController)
+        addTransactionRoute(navController)
         addCategoriesSection(navController)
-        addProfileRoute()
+        addProfileRoute(navController)
     }
 }
 
-private fun NavGraphBuilder.addHomeRoute() {
+private fun NavGraphBuilder.addHomeRoute(navController: NavHostController) {
     composable<Route.HomeRoute> {
         Text("Home")
     }
 }
 
-private fun NavGraphBuilder.addAnalysisRoute() {
+private fun NavGraphBuilder.addAnalysisRoute(navController: NavHostController) {
     composable<Route.AnalysisRoute> {
         Text("Analysis")
     }
 }
 
-private fun NavGraphBuilder.addTransactionRoute() {
+private fun NavGraphBuilder.addTransactionRoute(navController: NavHostController) {
     composable<Route.TransactionRoute> {
-        TransactionsRoute()
+        TransactionsRoute(onBackClick = { navController.popBackStack() })
     }
 }
 
@@ -76,9 +76,10 @@ private fun NavGraphBuilder.addCategoriesSection(navController: NavHostControlle
         startDestination = Route.CategoriesRoute
     ) {
         composable<Route.CategoriesRoute> {
-            CategoriesRoute(onCategoryClick = { categoryId ->
-                navController.navigate(route = Route.CategoryInfoRoute(categoryId))
-            })
+            CategoriesRoute(
+                onCategoryClick = { categoryId ->
+                    navController.navigate(route = Route.CategoryInfoRoute(categoryId))
+                }, onBackClick = { navController.popBackStack() })
         }
         composable<Route.CategoryInfoRoute> {
             CategoryInfoRoute(onBackClick = { navController.popBackStack() })
@@ -86,7 +87,7 @@ private fun NavGraphBuilder.addCategoriesSection(navController: NavHostControlle
     }
 }
 
-private fun NavGraphBuilder.addProfileRoute() {
+private fun NavGraphBuilder.addProfileRoute(navController: NavHostController) {
     composable<Route.ProfileRoute> {
         Text("Profile")
     }

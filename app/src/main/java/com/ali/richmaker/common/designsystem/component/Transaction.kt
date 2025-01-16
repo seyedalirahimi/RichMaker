@@ -1,4 +1,4 @@
-package com.ali.richmaker.ui.component
+package com.ali.richmaker.common.designsystem.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -21,8 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ali.richmaker.common.designsystem.component.CurrencyText
-import com.ali.richmaker.common.designsystem.component.DateText
 import com.ali.richmaker.common.designsystem.icon.RichMakerPainter
 import com.ali.richmaker.common.designsystem.icon.getCategoryIcon
 import java.util.Date
