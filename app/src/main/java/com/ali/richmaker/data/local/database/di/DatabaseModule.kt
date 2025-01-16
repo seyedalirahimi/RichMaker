@@ -26,29 +26,23 @@ class DatabaseModule {
     fun provideAppDatabase(@ApplicationContext appContext: Context): RichMakerDatabase {
 
         val predefinedIncomeCategories = listOf(
+            "Allowance",
             "Salary",
-            "Business",
-            "Investments",
-            "Government Support",
-            "Gifts",
-            "Other"
+            "Cash",
+            "Bonus",
+            "Other",
         )
         val predefinedExpenseCategories = listOf(
-            "Housing",
-            "Utilities",
             "Food",
-            "Transportation",
-            "Healthcare",
-            "Debt Payments",
-            "Lifestyle",
-            "Travel",
+            "Pet",
+            "Transport",
+            "Culture",
+            "Household",
+            "Apparel",
+            "Beauty",
+            "Health",
             "Education",
-            "Personal Care",
-            "Savings",
-            "Investments",
-            "Family Support",
-            "Charity",
-            "Gifts",
+            "Gift",
             "Other",
         )
 
@@ -81,7 +75,7 @@ class DatabaseModule {
                         db.execSQL("INSERT INTO categories (name, isIncome, isPredefined) VALUES ('$categoryName', FALSE, 1)")
                     }
 
-
+                    var index = 0
                     // Insert predefined transactions
                     predefinedTransactions.forEach { (categoryName, amount, time) ->
                         // Fetch the ID of the category to associate with the transaction
@@ -97,7 +91,7 @@ class DatabaseModule {
                             ${time}, 
                             $categoryId, 
                             $amount, 
-                            '${categoryName}', 
+                            'title #${index++}', 
                             NULL
                         )
                     """.trimIndent()

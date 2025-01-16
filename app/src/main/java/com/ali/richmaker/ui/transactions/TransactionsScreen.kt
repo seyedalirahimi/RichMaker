@@ -1,6 +1,5 @@
 package com.ali.richmaker.ui.transactions
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,15 +21,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ali.richmaker.R
 import com.ali.richmaker.common.designsystem.component.CurrencyText
 import com.ali.richmaker.common.designsystem.component.FinancialIconButton
+import com.ali.richmaker.common.designsystem.icon.RichMakerPainter
+import com.ali.richmaker.common.designsystem.icon.getCategoryIcon
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -134,7 +133,6 @@ fun TransactionsScreen(
                         transactionInMonth.transactions.forEach { transaction ->
                             item {
                                 TransactionItem(
-                                    imageResourceId = R.drawable.ic_profile,
                                     title = transaction.transactionEntity.title,
                                     date = transaction.transactionEntity.date,
                                     category = transaction.categoryEntity.name,
@@ -154,7 +152,6 @@ fun TransactionsScreen(
 
 @Composable
 fun TransactionItem(
-    @DrawableRes imageResourceId: Int,
     title: String,
     date: Date,
     category: String,
@@ -174,7 +171,7 @@ fun TransactionItem(
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                painter = painterResource(imageResourceId), tint = Color.White,
+                painter = RichMakerPainter.getCategoryIcon(category)(), tint = Color.White,
                 contentDescription = null,
                 modifier = modifier.size(24.dp)
             )
@@ -184,7 +181,7 @@ fun TransactionItem(
 
         Column {
             Text(
-                text = title, style = MaterialTheme.typography.bodyLarge
+                text = category, style = MaterialTheme.typography.bodyLarge
             )
             Text(
                 text = formatDateToCustomFormat(date),
@@ -192,6 +189,19 @@ fun TransactionItem(
                 color = MaterialTheme.colorScheme.onTertiary
             )
         }
+        Spacer(modifier = Modifier.weight(1f))
+        VerticalDivider(
+            modifier = Modifier
+                .width(4.dp)
+                .height(40.dp),
+            color = MaterialTheme.colorScheme.tertiary
+        )
+        Spacer(modifier = Modifier.weight(1f))
+
+        Text(
+            text = title,
+            style = MaterialTheme.typography.bodySmall,
+        )
         Spacer(modifier = Modifier.weight(1f))
         VerticalDivider(
             modifier = Modifier

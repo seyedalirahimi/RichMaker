@@ -41,7 +41,6 @@ fun CategoryInfo(
                 uiState.transactions.forEach { transaction ->
                     item {
                         TransactionItem(
-                            imageResourceId = R.drawable.ic_transaction,
                             title = transaction.transactionEntity.title,
                             date = transaction.transactionEntity.date,
                             category = transaction.categoryEntity.name,
