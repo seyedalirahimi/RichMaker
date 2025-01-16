@@ -29,5 +29,4 @@ class CategoriesViewModel @Inject constructor(
 
 data class CategoriesUiState(
     val categories: List<CategoryEntity> = emptyList(),
-
-    )
+)

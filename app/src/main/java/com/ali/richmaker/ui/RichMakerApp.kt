@@ -1,8 +1,12 @@
 package com.ali.richmaker.ui
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -37,7 +41,6 @@ fun RichMakerApp(modifier: Modifier = Modifier) {
                         val selected =
                             currentDestination?.hierarchy?.any { it.route == destinationName }
                                 ?: false
-
                         RichMakerNavigationBarItem(
                             selected = selected,
                             icon = {
@@ -69,9 +72,15 @@ fun RichMakerApp(modifier: Modifier = Modifier) {
                     }
                 }
 
-            }) { padding ->
-
-            RichMakerNavGraph(navController, modifier.padding(padding))
+            }) { innerPadding ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.primary) // Set your desired background color
+                        .padding(innerPadding)
+                ) {
+                    RichMakerNavGraph(navController, modifier)
+                }
         }
 
 

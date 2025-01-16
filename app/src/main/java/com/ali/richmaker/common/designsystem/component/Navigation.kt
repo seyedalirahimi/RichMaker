@@ -26,10 +26,9 @@ fun RichMakerNavigationBar(
     content: @Composable RowScope.() -> Unit,
 ) {
     NavigationBar(
-
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+            .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
             .height(110.dp),
         containerColor = RichMakerNavigationDefaults.navigationContentColor(),
         tonalElevation = 0.dp,

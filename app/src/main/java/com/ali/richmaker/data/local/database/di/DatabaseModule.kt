@@ -26,10 +26,20 @@ class DatabaseModule {
     fun provideAppDatabase(@ApplicationContext appContext: Context): RichMakerDatabase {
 
         val predefinedIncomeCategories = listOf(
-            "Salary", "Business", "Investments", "Government Support", "Gifts", "Other"
+            "Salary",
+            "Business",
+            "Investments",
+            "Government Support",
+            "Gifts",
+            "Other"
         )
         val predefinedExpenseCategories = listOf(
-            "Housing", "Utilities", "Food", "Transportation", "Healthcare", "Debt Payments",
+            "Housing",
+            "Utilities",
+            "Food",
+            "Transportation",
+            "Healthcare",
+            "Debt Payments",
             "Lifestyle",
             "Travel",
             "Education",
@@ -40,8 +50,7 @@ class DatabaseModule {
             "Charity",
             "Gifts",
             "Other",
-
-            )
+        )
 
 
         val predefinedTransactions = List(100) { // Generate 100 random transactions
@@ -88,7 +97,7 @@ class DatabaseModule {
                             ${time}, 
                             $categoryId, 
                             $amount, 
-                            '${categoryName} Transaction', 
+                            '${categoryName}', 
                             NULL
                         )
                     """.trimIndent()

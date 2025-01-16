@@ -2,32 +2,35 @@ package com.ali.richmaker.ui.transactions
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ali.richmaker.R
+import com.ali.richmaker.common.designsystem.component.CurrencyText
+import com.ali.richmaker.common.designsystem.component.FinancialIconButton
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -56,44 +59,78 @@ fun TransactionsScreen(
     modifier: Modifier = Modifier,
 ) {
 
-        Column(modifier = Modifier.padding(16.dp)) {
-            TextButton(
+    Column(
+        modifier = modifier.background(MaterialTheme.colorScheme.tertiary),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier = Modifier.size(8.dp))
+        Text(
+            text = "Transactions",
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Medium,
+        )
+        Spacer(modifier = Modifier.size(8.dp))
+
+        Column(
+            modifier = modifier.padding(
+                horizontal = 16.dp, vertical = 8.dp
+            )
+        ) {
+            FinancialIconButton(
+                label = "Total Balance",
+                isEnable = uiState.transactionsFilterMode == TransactionsFilterMode.Balance,
+                amount = uiState.totalBalance,
+                hasIcon = false,
+                modifier = modifier.fillMaxWidth(),
                 onClick = onBalanceClick
-            ) {
-                Text(
-                    color = if (uiState.transactionsFilterMode == TransactionsFilterMode.Balance) Color.Blue else Color.Black,
-                    text = "Balance: ${uiState.totalBalance.let { "$$it" }}"
+                )
+
+            Spacer(modifier = modifier.size(12.dp))
+
+            Row(modifier = Modifier.fillMaxWidth()) {
+                FinancialIconButton(
+                    label = "Income",
+                    isEnable = uiState.transactionsFilterMode == TransactionsFilterMode.Income,
+                    amount = uiState.totalIncome,
+                    modifier = Modifier.weight(1f),
+                    onClick = onIncomeClick
+                )
+                Spacer(Modifier.size(8.dp))
+                FinancialIconButton(
+                    label = "Expense",
+                    isEnable = uiState.transactionsFilterMode == TransactionsFilterMode.Expense,
+                    amount = uiState.totalExpense,
+                    modifier = Modifier.weight(1f),
+                    onClick = onExpenseClick
                 )
             }
-
-            TextButton(
-                onClick = onIncomeClick
+        }
+        Spacer(modifier = Modifier.size(18.dp))
+        if (uiState.transactions.isEmpty()) {
+            Text(text = "No transactions available.")
+        } else {
+            Column(
+                modifier = Modifier
+                    .background(
+                        color = MaterialTheme.colorScheme.primary,
+                        shape = RoundedCornerShape(topStartPercent = 10, topEndPercent = 10)
+                    )
+                    .padding(
+                        horizontal = 16.dp, vertical = 8.dp
+                    )
             ) {
-                Text(
-                    color = if (uiState.transactionsFilterMode == TransactionsFilterMode.Income) Color.Blue else Color.Black,
-                    text = "Income: ${uiState.totalIncome.let { "$$it" }}"
-                )
-            }
-
-            TextButton(
-                onClick = onExpenseClick
-            ) {
-                Text(
-                    color = if (uiState.transactionsFilterMode == TransactionsFilterMode.Expense) Color.Blue else Color.Black,
-                    text = "Expense: ${uiState.totalExpense.let { "$$it" }}"
-                )
-            }
-
-            Text(text = "Transactions:")
-            if (uiState.transactions.isEmpty()) {
-                Text(text = "No transactions available.")
-            } else {
-                LazyColumn {
+                LazyColumn(
+                    modifier = Modifier.padding(8.dp),
+                ) {
                     uiState.transactions.forEach { transactionInMonth ->
                         item {
-                            Text(text = transactionInMonth.month)
+                            Text(
+                                fontWeight = MaterialTheme.typography.labelMedium.fontWeight,
+                                text = transactionInMonth.month,
+                                modifier = Modifier.padding(8.dp)
+                            )
                         }
-
                         transactionInMonth.transactions.forEach { transaction ->
                             item {
                                 TransactionItem(
@@ -109,6 +146,7 @@ fun TransactionsScreen(
                     }
 
                 }
+            }
         }
 
     }
@@ -126,60 +164,50 @@ fun TransactionItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(12.dp)
-            .background(Color(0xFFEFF8F1)) // Background color
-            .padding(12.dp), verticalAlignment = Alignment.CenterVertically
+            .padding(horizontal = 4.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        // Icon Section
         Box(
             modifier = Modifier
                 .size(48.dp)
-                .background(Color(0xFF5B8FF9), CircleShape), // Icon background
+                .background(MaterialTheme.colorScheme.onPrimary, RoundedCornerShape(percent = 35)),
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                painter = painterResource(imageResourceId),
+                painter = painterResource(imageResourceId), tint = Color.White,
                 contentDescription = null,
                 modifier = modifier.size(24.dp)
             )
         }
 
-        Spacer(modifier = Modifier.width(16.dp))
+        Spacer(modifier = Modifier.size(8.dp))
 
-        // Title and Date Section
-        Column(modifier = Modifier.weight(1f)) {
+        Column {
             Text(
-                text = title,
-                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
-                color = Color.Black
+                text = title, style = MaterialTheme.typography.bodyLarge
             )
             Text(
                 text = formatDateToCustomFormat(date),
-                style = MaterialTheme.typography.bodySmall.copy(fontSize = 14.sp),
-                color = Color(0xFF5B8FF9) // Light blue
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onTertiary
             )
         }
+        Spacer(modifier = Modifier.weight(1f))
+        VerticalDivider(
+            modifier = Modifier
+                .width(4.dp)
+                .height(40.dp),
+            color = MaterialTheme.colorScheme.tertiary
+        )
+        Spacer(modifier = Modifier.weight(1f))
 
-        Spacer(modifier = Modifier.width(16.dp))
+        CurrencyText(
+            amount = amount,
+            fontSize = 14.sp,
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = modifier
 
-        // Category and Amount Section
-        Column(
-            horizontalAlignment = Alignment.End
-        ) {
-            Text(
-                text = category,
-                style = MaterialTheme.typography.bodySmall.copy(fontSize = 14.sp),
-                color = Color.Gray
-            )
-            Text(
-                text = String.format(Locale.US, "%.2f", amount),
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = if (amount > 0) Color.Black else Color(0xFF5B8FF9) // Black for income, Blue for expense
-                ),
-                textAlign = TextAlign.End
-            )
-        }
+        )
     }
 }
 
