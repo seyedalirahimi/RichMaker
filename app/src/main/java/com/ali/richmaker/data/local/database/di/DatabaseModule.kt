@@ -49,7 +49,7 @@ class DatabaseModule {
 
         val predefinedTransactions = List(100) { // Generate 100 random transactions
             val randomAmount = Random.nextDouble(
-                -5000.0, 5000.0
+                -2000.0, 5000.0
             )
             val randomCategory = if (randomAmount >= 0) {
                 predefinedIncomeCategories.random()

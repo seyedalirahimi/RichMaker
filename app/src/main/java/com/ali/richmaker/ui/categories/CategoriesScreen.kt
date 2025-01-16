@@ -15,7 +15,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
@@ -23,9 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -100,37 +96,37 @@ fun CategoriesScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Progress Bar
+            val currentAmount = uiState.totalBalance + uiState.totalExpense
             RichMakerProgressIndicator(
-                currentAmount = uiState.totalBalance - uiState.totalExpense,
+                currentAmount = currentAmount,
                 maxAmount = uiState.goal,
                 modifier = Modifier.fillMaxWidth()
             )
+            Spacer(modifier = Modifier.height(16.dp))
 
-            Text(
-                text = "30% Of Your Expenses, Looks Good.",
-                color = Color.Black,
-                modifier = Modifier.padding(vertical = 8.dp)
-            )
         }
 
         LazyVerticalGrid(
             columns = GridCells.Fixed(3),
             modifier = modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .background(
+                    MaterialTheme.colorScheme.primary,
+                    RoundedCornerShape(topStartPercent = 15, topEndPercent = 15)
+                )
+                .padding(horizontal = 16.dp, vertical = 24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(uiState.categories.size) { index ->
                 println(index)
                 val category = uiState.categories[index]
-                RichMakerIconButton(label = category.name,
+                RichMakerIconButton(
+                    label = category.name,
                     icon = RichMakerPainter.getCategoryIcon(category.name)(),
                     onClick = { onCategoryClick(category.id) },
-                    modifier = Modifier.semantics {
-                        contentDescription = "Category ${category.name}"
-                    })
+                    modifier = Modifier
+                )
 
             }
         }

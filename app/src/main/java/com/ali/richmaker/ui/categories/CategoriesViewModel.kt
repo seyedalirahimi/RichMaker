@@ -19,7 +19,6 @@ import javax.inject.Inject
 class CategoriesViewModel @Inject constructor(
     getAddCategoriesUseCase: GetAddCategoriesUseCase,
     transactionRepository: TransactionRepository
-
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<CategoriesUiState> =
@@ -28,7 +27,7 @@ class CategoriesViewModel @Inject constructor(
 
     init {
         _state.value = _state.value.copy(
-            goal = 10000.0
+            goal = 200_000.0
         )
 
         viewModelScope.launch {

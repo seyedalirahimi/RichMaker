@@ -45,7 +45,7 @@ fun RichMakerIconButton(
         // Icon
         Box(
             modifier = Modifier
-                .size(64.dp)
+                .size(72.dp)
                 .background(MaterialTheme.colorScheme.onPrimary, RoundedCornerShape(8.dp))
                 .align(Alignment.CenterHorizontally),
         ) {

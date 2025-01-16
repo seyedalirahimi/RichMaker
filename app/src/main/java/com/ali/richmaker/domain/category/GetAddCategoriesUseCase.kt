@@ -6,6 +6,5 @@ import javax.inject.Inject
 class GetAddCategoriesUseCase @Inject constructor(
     private val categoryDao: CategoryDao
 ) {
-
     operator fun invoke() = categoryDao.getAllCategories()
 }

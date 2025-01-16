@@ -23,7 +23,6 @@ import com.ali.richmaker.common.designsystem.theme.RichMakerTheme
 fun RichMakerProgressIndicator(
     currentAmount: Double = 1000.0, maxAmount: Double = 4500.0, modifier: Modifier = Modifier
 ) {
-    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val progress: Float = (currentAmount / maxAmount).toFloat()
     Box(
         modifier = modifier
@@ -43,14 +42,14 @@ fun RichMakerProgressIndicator(
             modifier = Modifier
                 .fillMaxHeight()
                 .fillMaxWidth(progress)
-                .background(Color(0xFF052224), shape = RoundedCornerShape(16.dp))
+                .background(MaterialTheme.colorScheme.onPrimary, shape = RoundedCornerShape(16.dp))
         )
 
         // Percentage Text (Inside, at the start of the progress bar)
         Text(
             text = "${(progress * 100).toInt()}%",
             style = MaterialTheme.typography.bodyMedium,
-            color = Color.White,
+            color = Color.Black,
             modifier = Modifier.padding(start = 16.dp)
         )
 
@@ -58,13 +57,11 @@ fun RichMakerProgressIndicator(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.CenterEnd // Align to the right dynamically
         ) {
-            Text(
-                text = maxAmount.toString(),
+            CurrencyText(
+                amount = currentAmount,
                 style = MaterialTheme.typography.bodyMedium,
                 color = Color.Black,
-                modifier = Modifier.padding(
-                    start = ((screenWidth - 64.dp) * progress).coerceAtLeast(64.dp)
-                )
+                modifier = Modifier.padding(end = 16.dp)
             )
         }
     }

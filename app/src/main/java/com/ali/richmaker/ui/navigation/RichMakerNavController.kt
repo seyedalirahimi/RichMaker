@@ -43,7 +43,9 @@ fun RichMakerNavGraph(
     navController: NavHostController, modifier: Modifier = Modifier
 ) {
     NavHost(
-        navController = navController, startDestination = Route.TransactionRoute, modifier = modifier
+        navController = navController,
+        startDestination = Route.CategoryBaseRoute,
+        modifier = modifier
     ) {
         addHomeRoute(navController)
         addAnalysisRoute(navController)
