@@ -15,6 +15,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ali.richmaker.common.designsystem.component.RichMakerIconButton
 import com.ali.richmaker.common.designsystem.icon.RichMakerPainter
+import com.ali.richmaker.common.designsystem.icon.getCategoryIcon
 
 @Composable
 fun CategoriesRoute(
@@ -51,7 +52,7 @@ fun CategoriesScreen(
             val category = uiState.categories[index]
             RichMakerIconButton(
                 label = category.name,
-                icon = RichMakerPainter.Profile(),
+                icon = RichMakerPainter.getCategoryIcon(category.name)(),
                 onClick = { onCategoryClick(category.id) },
                 modifier = Modifier
                     .semantics { contentDescription = "Category ${category.name}" }
