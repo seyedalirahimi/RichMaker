@@ -4,20 +4,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ali.richmaker.data.TransactionRepository
 import com.ali.richmaker.data.local.database.model.CategoryEntity
-import com.ali.richmaker.domain.category.GetAddCategoriesUseCase
-import com.ali.richmaker.ui.transactions.TransactionsUiState
+import com.ali.richmaker.domain.category.GetAllCategoriesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CategoriesViewModel @Inject constructor(
-    getAddCategoriesUseCase: GetAddCategoriesUseCase,
+    getAllCategoriesUseCase: GetAllCategoriesUseCase,
     transactionRepository: TransactionRepository
 ) : ViewModel() {
 
@@ -41,7 +37,7 @@ class CategoriesViewModel @Inject constructor(
             }
         }
         viewModelScope.launch {
-            getAddCategoriesUseCase().collect { categories ->
+            getAllCategoriesUseCase().collect { categories ->
                 _state.value = _state.value.copy(categories = categories)
             }
         }

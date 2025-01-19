@@ -5,11 +5,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +24,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ali.richmaker.common.designsystem.component.FinancialIconButton
 import com.ali.richmaker.common.designsystem.component.RichMakerTopAppBar
 import com.ali.richmaker.common.designsystem.component.TransactionItem
+import com.ali.richmaker.data.local.database.model.TransactionsInMonthModel
 
 @Composable
 fun TransactionsRoute(
@@ -51,10 +54,9 @@ fun TransactionsScreen(
     modifier: Modifier = Modifier,
 ) {
 
-    LazyColumn(
+    Column(
         modifier = modifier.background(MaterialTheme.colorScheme.tertiary),
     ) {
-        item(key = "header") {
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.Center,
@@ -99,21 +101,67 @@ fun TransactionsScreen(
                 }
                 Spacer(modifier = Modifier.size(18.dp))
             }
+        TransactionList(
+            uiState.transactions,
+            modifier = Modifier
+        )
+    }
+}
+
+@Composable
+fun TransactionList(
+    transactions: List<TransactionsInMonthModel>,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(
+        modifier = modifier
+            .fillMaxSize()
+            .background(
+                MaterialTheme.colorScheme.primary,
+                RoundedCornerShape(topStartPercent = 15, topEndPercent = 15)
+            )
+            .padding(horizontal = 12.dp, vertical = 8.dp),
+    ) {
+
+        transactions.forEachIndexed { index, transactionsInMonthModel ->
+            item {
+                if (index == 0) {
+                    Spacer(modifier = Modifier.height(24.dp))
+                }
+                Text(
+                    text = transactionsInMonthModel.month,
+                    fontWeight = MaterialTheme.typography.labelMedium.fontWeight,
+                )
+            }
+
+            transactionsInMonthModel.transactions.forEach { transaction ->
+                item {
+                    TransactionItem(
+                        title = transaction.transactionEntity.title,
+                        date = transaction.transactionEntity.date,
+                        category = transaction.categoryEntity.name,
+                        amount = transaction.transactionEntity.amount,
+                        modifier = Modifier.padding(vertical = 4.dp)
+                    )
+                }
+            }
+
         }
 
         items(
-            count = uiState.transactions.size,
-            key = { index -> uiState.transactions[index].month }) { index ->
-            val transactionInMonth = uiState.transactions[index]
+            count = transactions.size,
+            key = { index -> transactions[index].month }) { index ->
+            val transactionInMonth = transactions[index]
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.primary)
+                    .padding(vertical = if (index == 0) 48.dp else 8.dp)
+
             ) {
                 Text(
                     text = transactionInMonth.month,
                     fontWeight = MaterialTheme.typography.labelMedium.fontWeight,
-                    modifier = Modifier.padding(8.dp)
                 )
 
                 transactionInMonth.transactions.forEach { transaction ->

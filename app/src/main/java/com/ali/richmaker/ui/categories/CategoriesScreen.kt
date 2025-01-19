@@ -32,6 +32,7 @@ import com.ali.richmaker.common.designsystem.component.RichMakerProgressIndicato
 import com.ali.richmaker.common.designsystem.component.RichMakerTopAppBar
 import com.ali.richmaker.common.designsystem.icon.RichMakerPainter
 import com.ali.richmaker.common.designsystem.icon.getCategoryIcon
+import com.ali.richmaker.data.local.database.model.CategoryEntity
 
 @Composable
 fun CategoriesRoute(
@@ -69,67 +70,94 @@ fun CategoriesScreen(
             onBackClick = onBackClick,
         )
 
-        Column(
+        CategoryHeader(
+            totalBalance = uiState.totalBalance,
+            totalExpense = uiState.totalExpense,
+            goal = uiState.goal,
             modifier = Modifier.padding(horizontal = 48.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                BalanceItem(
-                    title = "Total Balance",
-                    amount = uiState.totalBalance,
-                )
+        )
 
-                VerticalDivider(
-                    modifier = Modifier
-                        .width(4.dp)
-                        .height(40.dp),
-                    color = Color.White
-                )
+        CategoryList(
+            categories = uiState.categories,
+            onCategoryClick = onCategoryClick,
+            modifier = Modifier
+        )
+    }
+}
 
-                BalanceItem(
-                    title = "Total Expense",
-                    amount = uiState.totalExpense,
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            val currentAmount = uiState.totalBalance + uiState.totalExpense
-            RichMakerProgressIndicator(
-                currentAmount = currentAmount,
-                maxAmount = uiState.goal,
-                modifier = Modifier.fillMaxWidth()
+@Composable
+private fun CategoryList(
+    modifier: Modifier,
+    categories: List<CategoryEntity>,
+    onCategoryClick: (Int) -> Unit
+) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(3),
+        modifier = modifier
+            .fillMaxSize()
+            .background(
+                MaterialTheme.colorScheme.primary,
+                RoundedCornerShape(topStartPercent = 15, topEndPercent = 15)
+            ).padding(horizontal = 16.dp, vertical = 24.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        items(categories.size) { index ->
+            println(index)
+            val category = categories[index]
+            RichMakerIconButton(
+                label = category.name,
+                icon = RichMakerPainter.getCategoryIcon(category.name)(),
+                onClick = { onCategoryClick(category.id) },
+                modifier = Modifier
             )
-            Spacer(modifier = Modifier.height(16.dp))
 
         }
+    }
+}
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(3),
-            modifier = modifier
-                .fillMaxSize()
-                .background(
-                    MaterialTheme.colorScheme.primary,
-                    RoundedCornerShape(topStartPercent = 15, topEndPercent = 15)
-                )
-                .padding(horizontal = 16.dp, vertical = 24.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+@Composable
+fun CategoryHeader(
+    totalBalance: Double = 0.0,
+    totalExpense: Double = 0.0,
+    goal: Double = 0.0,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            items(uiState.categories.size) { index ->
-                println(index)
-                val category = uiState.categories[index]
-                RichMakerIconButton(
-                    label = category.name,
-                    icon = RichMakerPainter.getCategoryIcon(category.name)(),
-                    onClick = { onCategoryClick(category.id) },
-                    modifier = Modifier
-                )
+            BalanceItem(
+                title = "Total Balance",
+                amount = totalBalance,
+            )
 
-            }
+            VerticalDivider(
+                modifier = Modifier
+                    .width(4.dp)
+                    .height(40.dp),
+                color = Color.White
+            )
+
+            BalanceItem(
+                title = "Total Expense",
+                amount = totalExpense,
+            )
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        val currentAmount = totalBalance + totalExpense
+        RichMakerProgressIndicator(
+            currentAmount = currentAmount,
+            maxAmount = goal,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+
     }
 }
 

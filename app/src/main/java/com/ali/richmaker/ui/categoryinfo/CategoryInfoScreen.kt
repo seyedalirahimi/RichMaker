@@ -1,15 +1,21 @@
 package com.ali.richmaker.ui.categoryinfo
 
-import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ali.richmaker.common.designsystem.component.RichMakerTopAppBar
 import com.ali.richmaker.common.designsystem.component.TransactionItem
+import com.ali.richmaker.ui.categories.CategoryHeader
+import com.ali.richmaker.ui.transactions.TransactionList
 
 
 @Composable
@@ -19,41 +25,41 @@ fun CategoryInfoRoute(
     modifier: Modifier = Modifier
 ) {
     val uiState = categoryInfoViewModel.state.collectAsStateWithLifecycle()
-    CategoryInfo(
-        uiState = uiState.value, onBackClick = onBackClick, modifier = modifier
+    CategoryInfoScreen(
+        uiState = uiState.value,
+        onBackClick = onBackClick,
+        modifier = modifier
     )
 }
 
 @Composable
-fun CategoryInfo(
-    uiState: CategoryInfoUiState, onBackClick: () -> Unit = {}, modifier: Modifier = Modifier
+fun CategoryInfoScreen(
+    uiState: CategoryInfoUiState,
+    onBackClick: () -> Unit = {},
+    modifier: Modifier = Modifier
 ) {
-    Column {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(
+                color = MaterialTheme.colorScheme.tertiary
+            ),
+    ) {
         RichMakerTopAppBar(
             title = uiState.categoryName,
             onBackClick = onBackClick,
         )
-        if (uiState.transactions.isEmpty()) {
-            Text(text = "No transactions available.")
-        } else {
-            Column {
+        CategoryHeader(
+            totalBalance = uiState.totalBalance,
+            totalExpense = uiState.totalExpense,
+            goal = uiState.goal,
+            modifier = modifier.padding(horizontal = 48.dp)
+        )
 
-
-                LazyColumn {
-                    uiState.transactions.forEach { transaction ->
-                        item {
-                            TransactionItem(
-                                title = transaction.transactionEntity.title,
-                                date = transaction.transactionEntity.date,
-                                category = transaction.categoryEntity.name,
-                                amount = transaction.transactionEntity.amount,
-                                modifier = modifier,
-                            )
-                        }
-                    }
-                }
-            }
-        }
+        TransactionList(
+            uiState.transactions,
+            modifier = Modifier
+        )
     }
 
 }

@@ -42,7 +42,7 @@ fun RichMakerProgressIndicator(
             modifier = Modifier
                 .fillMaxHeight()
                 .fillMaxWidth(progress)
-                .background(MaterialTheme.colorScheme.onPrimary, shape = RoundedCornerShape(16.dp))
+                .background(MaterialTheme.colorScheme.onSecondary, shape = RoundedCornerShape(16.dp))
         )
 
         // Percentage Text (Inside, at the start of the progress bar)

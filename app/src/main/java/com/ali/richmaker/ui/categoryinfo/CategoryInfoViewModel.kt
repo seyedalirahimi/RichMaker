@@ -4,9 +4,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.ali.richmaker.data.local.database.model.TransactionWithCategoryModel
+import com.ali.richmaker.data.TransactionRepository
+import com.ali.richmaker.data.local.database.model.TransactionsInMonthModel
 import com.ali.richmaker.domain.category.GetCategoryByIdUseCase
 import com.ali.richmaker.domain.category.GetTransactionsByCategoryUseCase
+import com.ali.richmaker.domain.transaction.GroupTransactionsByMonthUseCase
 import com.ali.richmaker.ui.navigation.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +21,9 @@ import javax.inject.Inject
 @HiltViewModel
 class CategoryInfoViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    transactionRepository: TransactionRepository,
     private val getCategoryByIdUseCase: GetCategoryByIdUseCase,
+    private val groupTransactionsByMonthUseCase: GroupTransactionsByMonthUseCase,
     getTransactionsByCategoryUseCase: GetTransactionsByCategoryUseCase
 ) : ViewModel() {
 
@@ -30,6 +34,20 @@ class CategoryInfoViewModel @Inject constructor(
     val state: StateFlow<CategoryInfoUiState> get() = _state
 
     init {
+        _state.value = _state.value.copy(
+            goal = 200_000.0
+        )
+
+        viewModelScope.launch {
+            transactionRepository.getBalance().collect { balance ->
+                _state.value = _state.value.copy(totalBalance = balance)
+            }
+        }
+        viewModelScope.launch {
+            transactionRepository.getExpense().collect { expense ->
+                _state.value = _state.value.copy(totalExpense = expense)
+            }
+        }
         viewModelScope.launch {
             getCategoryByIdUseCase(categoryId).collectLatest { category ->
                 _state.update {
@@ -43,8 +61,9 @@ class CategoryInfoViewModel @Inject constructor(
         viewModelScope.launch {
             getTransactionsByCategoryUseCase(categoryId).collect { transactions ->
                 _state.update {
+                    val groupedTransactions = groupTransactionsByMonthUseCase(transactions)
                     it.copy(
-                        transactions = transactions
+                        transactions = groupedTransactions
                     )
                 }
             }
@@ -55,5 +74,8 @@ class CategoryInfoViewModel @Inject constructor(
 
 data class CategoryInfoUiState(
     val categoryName: String = "",
-    val transactions: List<TransactionWithCategoryModel> = emptyList(),
+    val transactions: List<TransactionsInMonthModel> = emptyList(),
+    val totalBalance: Double = 0.0,
+    val totalExpense: Double = 0.0,
+    val goal: Double = 0.0,
 )
